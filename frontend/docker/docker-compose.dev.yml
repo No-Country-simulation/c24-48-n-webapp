@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    restart: always
+    ports:
+      - "5173:5173"  # Exponer el puerto correcto
+    volumes:
+      - ..:/app
+    environment:
+      - NODE_ENV=development
+    command: ["sh", "/app/docker/entrypoint.dev.sh"]  # Ejecutar el entrypoint
