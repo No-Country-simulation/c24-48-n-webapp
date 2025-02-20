@@ -17,7 +17,9 @@ BASE_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'apps.core'
+]
 
 THIRD_APPS = [
     'rest_framework',

@@ -28,7 +28,11 @@ Plataforma web para facilitar la adopción de mascotas en refugios. Permite a lo
 
 ### 🎨 UX/UI
 
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)![Optimal Workshop](https://img.shields.io/badge/Optimal%20Workshop-000000?style=for-the-badge&logo=optimalworkshop&logoColor=white)![Trello](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)![Photoshop](https://img.shields.io/badge/Photoshop-31A8FF?style=for-the-badge&logo=adobephotoshop&logoColor=white)![Canva](https://img.shields.io/badge/Canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white)![Whimsical](https://img.shields.io/badge/Whimsical-FF4C4C?style=for-the-badge&logo=whimsical&logoColor=white)
+
 ### 🧪 QA
+
+![Selenium](https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=selenium&logoColor=white)![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)![JMeter](https://img.shields.io/badge/JMeter-D22128?style=for-the-badge&logo=apachejmeter&logoColor=white)
 
 ## 🛠️ Instalación y Configuración
 
@@ -40,7 +44,7 @@ Plataforma web para facilitar la adopción de mascotas en refugios. Permite a lo
 
 | Nombre                 | Rol       | GitHub                   | Linkedin                 |
 |------------------------|-----------|--------------------------|--------------------------|
-| Paola Holguin          | QA        | [PaolaHolguin-QAEngineer](https://github.com/PaolaHolguin-QAEngineer) | [perfil](https://linkedin.com/in/) |
-| Gabriela Bareiro       | UX/UI     | [GabiBareiro](https://github.com/GabiBareiro) | [perfil](https://linkedin.com/in/) |
+| Paola Holguin          | QA        | [PaolaHolguin-QAEngineer](https://github.com/PaolaHolguin-QAEngineer) | [paolaholguin-qaengineer](https://linkedin.com/in/paolaholguin-qaengineer) |
+| Gabriela Bareiro       | UX/UI     | [GabiBareiro](https://github.com/GabiBareiro) | [gabriela-bareiro](https://linkedin.com/in/gabriela-bareiro) |
 | Cristia Paolo Delpiano | Backend   | [delpianocp](https://github.com/delpianocp) | [perfil](https://linkedin.com/in/) |
 | Johann Gaviria         | Fullstack | [JohannGaviria](https://github.com/JohannGaviria) | [johanngaviria](https://linkedin.com/in/johanngaviria) |
