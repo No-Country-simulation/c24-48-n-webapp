@@ -11,6 +11,11 @@ API REST desarrollada con Django y Django REST Framework. Su propósito es gesti
 - [Instalación](#instalación)
   - [Entorno con Docker](#entorno-con-docker)
   - [Entorno Local](#entorno-local)
+- [Comandos](#comandos)
+  - [Comandos Personalizados](#comandos-personalizados)
+  - [Comandos para Ejecutar Tests](#comandos-para-ejecutar-tests)
+    - [Entorno con Docker](#entorno-con-docker)
+    - [Entorno Local](#entorno-local)
 - [Endpoints](#endpoints)
   - [Mascotas](#mascotas)
 
@@ -88,6 +93,48 @@ python manage.py runserver --settings=config.settings.development
 ```
 
 ¡Listo! El proyecto ahora debería estar en funcionamiento en tu entorno local. Puedes acceder a él desde tu navegador web visitando `http://127.0.0.1:8000/`.
+
+---
+
+## Comandos  
+
+### Comandos Personalizados  
+
+- **Crear registros de mascotas por defecto**  
+  ```bash
+  python manage.py create_default_pets
+  python manage.py create_default_pets --count=<cantidad>  # Opcional, por defecto crea 10 registros
+  ```
+
+### Comandos para Ejecutar Tests  
+
+#### Ejecutar tests en un entorno Docker  
+
+- **Ejecutar todos los tests:**  
+  ```bash
+  docker exec -it <id_container> python manage.py test apps --settings=config.settings.<entorno>
+  ```  
+  `<entorno>` puede ser `development` o `production`.
+
+- **Ejecutar un test específico:**  
+  ```bash
+  docker exec -it <id_container> python manage.py test apps.<nombre_módulo>.tests.<nombre_test> --settings=config.settings.<entorno>
+  ```  
+  Reemplaza `<nombre_módulo>` y `<nombre_test>` con los valores correspondientes.  
+
+#### Ejecutar tests en un entorno local  
+
+- **Ejecutar todos los tests:**  
+  ```bash
+  python manage.py test apps --settings=config.settings.<entorno>
+  ```  
+  `<entorno>` puede ser `development` o `production`.
+
+- **Ejecutar un test específico:**  
+  ```bash
+  python manage.py test apps.<nombre_módulo>.tests.<nombre_test> --settings=config.settings.<entorno>
+  ```  
+  Reemplaza `<nombre_módulo>` y `<nombre_test>` con los valores correspondientes.  
 
 ---
 
