@@ -44,6 +44,9 @@ source venv/bin/activate
   - `DB_HOST` -> Host de la base de datos.
   - `DB_PORT` -> Puerto de la base de datos.
   - `DJANGO_SETTINGS_MODULE` -> Módulo de configuración de Django.
+  - `CLOUDINARY_CLOUD_NAME` -> Nombre de la nube de Cloudinary.
+  - `CLOUDINARY_API_KEY` -> Clave API de Cloudinary.
+  - `CLOUDINARY_API_SECRET` -> Secreto API de Cloudinary.
 
 ### Entorno con Docker
 
