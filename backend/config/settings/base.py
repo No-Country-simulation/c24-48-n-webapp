@@ -10,6 +10,7 @@ load_dotenv(Path.joinpath(BASE_DIR, '.env'))
 
 # Application definition
 BASE_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -17,7 +18,9 @@ BASE_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'apps.users'
+]
 
 THIRD_APPS = [
     'rest_framework',
