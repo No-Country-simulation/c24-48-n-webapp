@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 class UserSerializer(serializers.ModelSerializer):
     '''
@@ -68,4 +69,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id','username', 'first_name', 'last_name', 'email', 'is_active']
 
-    
+
+    def validate_email(self, value):
+        email = User.objects.filter(email=value)
+        if len(email) != 0:
+            raise serializers.ValidationError("Email already exists.")
+        return value
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Token
+        fields = ['key', 'user']

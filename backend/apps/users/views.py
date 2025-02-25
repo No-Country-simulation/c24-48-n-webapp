@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .serializer import UserSerializer, UserUpdateSerializer
+from .serializer import UserSerializer, UserUpdateSerializer, TokenSerializer
 from  rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -9,7 +9,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, permission_classes
-
+from django.contrib.sessions.models import Session
+from datetime import datetime
 
 @api_view(['POST'])
 def user_register(request):
@@ -64,7 +65,7 @@ def user_register(request):
             'message': user_serializer.errors 
             })
 
-#vista  protegida, se debe tener token para ingresar(login)
+
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -87,15 +88,14 @@ def user_update(request, pk=None):
     '''
     #queryset
     user = User.objects.filter(id = pk).first()
-    #user_serializer = UserSerializer(request.user)
-    #print(user_serializer.data['username', 'email'])
+
     #validacion
     if user:
         #Realiza los cambios enviados             
         user_serializer = UserUpdateSerializer(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
-            #return Response(user_serializer.data, status=status.HTTP_200_OK)
+            
             return Response({
                 'status': 'success', 
                 'message': 'User update successfully.', 
@@ -103,17 +103,17 @@ def user_update(request, pk=None):
                     'user': user_serializer.data
                     }
                 })
-        #return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         return Response({
         'status': 'error', 
         'message': user_serializer.errors
             })
     else:
-        #return Response({'message': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+
         return Response({
         'status': 'error', 
         'message': 'User does not exist.'
-            })
+            }, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
@@ -170,7 +170,7 @@ def user_login(request):
                 #Se asocia token al usuario
                 token, created = Token.objects.get_or_create(user=user)
                 user_serializer = UserSerializer(user)
-                #si token ya existe, borra y crea uno nuevo
+                #si token ya existe, no deja iniciar sesion
                 if created:
                     #envio de json con usuario y token
                     return Response({
@@ -179,32 +179,58 @@ def user_login(request):
                         'data': {
                             'token': token.key, 
                             'user': user_serializer.data}
-                            })
+                            }, status= status.HTTP_200_OK)
                 else:
                     token.delete()
-                    token = Token.objects.create(user=user)
                     return Response({
-                        'status': 'success', 
-                        'message': 'User login successfully.', 
-                        'data': {
-                            'token': token.key, 
-                            'user': user_serializer.data}
-                            })
+                        'status': 'error', 
+                        'message': 'user has already logged in.'
+                        }, status= status.HTTP_409_CONFLICT)
             else:
                 return Response({
                     'status': 'error', 
                     'message': 'Inactive user.'
-                    })
+                    }, status= status.HTTP_409_CONFLICT)
 
         else:
             return Response({
                 'status': 'error', 
                 'message': 'invalid password.'
-                })
+                }, status= status.HTTP_400_BAD_REQUEST)
     
     except User.DoesNotExist:
         return Response({
             'status': 'error', 
             'message': 'User does not exist.'
-            })
+            }, status= status.HTTP_400_BAD_REQUEST)
+    
 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def user_logout(request):
+    
+    token_key = request.data.get('key')
+    token = Token.objects.filter(key=token_key).first()
+    print(token)
+    if token:
+        user = token.user
+        
+        all_session = Session.objects.filter(expire_date__gte = datetime.now())
+        if all_session.exists():
+            for session in all_session:
+                session_data = session.get_decoded()
+                if user.id == int(session_data.get('_auth_user_id')):
+                    session.delete()
+        
+        token.delete()
+        return Response({
+            'status': 'success', 
+            'message': 'logout Ok.'
+            }, status= status.HTTP_200_OK)
+
+    else:
+        return Response({
+            'status': 'error', 
+            'message': 'Token does not exist.'
+            }, status= status.HTTP_400_BAD_REQUEST)
