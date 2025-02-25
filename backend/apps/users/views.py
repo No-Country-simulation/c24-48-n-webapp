@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .serializer import UserSerializer, UserUpdateSerializer, TokenSerializer
+from .serializer import UserSerializer, UserUpdateSerializer
 from  rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -48,7 +48,6 @@ def user_register(request):
         token = Token.objects.create(user=user)
         
         user_serializer =UserSerializer(user)
-        #return Response({'token': token.key, 'user': user_serializer.data}, status=status.HTTP_201_CREATED)
         return Response({
             'status': 'success', 
             'message': 'User registered successfully.', 
@@ -56,14 +55,14 @@ def user_register(request):
                 'token': token.key, 
                 'user': user_serializer.data
                     }
-                })
+                }, status=status.HTTP_201_CREATED)
+    
     else:
-        #return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         error = user_serializer.errors
         return Response({
             'status': 'error', 
             'message': user_serializer.errors 
-            })
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PUT'])
@@ -95,7 +94,6 @@ def user_update(request, pk=None):
         user_serializer = UserUpdateSerializer(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
-            
             return Response({
                 'status': 'success', 
                 'message': 'User update successfully.', 

@@ -64,7 +64,19 @@ class UserSerializer(serializers.ModelSerializer):
         
         
 class UserUpdateSerializer(serializers.ModelSerializer):
-    
+    '''
+    Serializer para actualizar la información del usuario.
+
+    Atributos:
+        model (User): El modelo de usuario asociado a este serializer.
+        fields (list): Campos que serán incluidos en la serialización: 'id', 'username', 
+                       'first_name', 'last_name', 'email', 'is_active'.
+
+    Métodos:
+        validate_email(value):
+            Valida que el email proporcionado no exista ya en el sistema.
+            Si el email ya existe, levanta una ValidationError.
+    '''
     class Meta():
         model = User
         fields = ['id','username', 'first_name', 'last_name', 'email', 'is_active']
@@ -76,8 +88,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         return value
 
-
-class TokenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Token
-        fields = ['key', 'user']
