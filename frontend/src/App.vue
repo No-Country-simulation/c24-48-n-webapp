@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="app-container">
+  <div id="app" class="min-h-screen bg-[#F7FAFC] flex flex-col">
     <Navbar />
-    <router-view />
+    <router-view class="flex-grow" />
     <Footer />
   </div>
 </template>
@@ -19,34 +19,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.app-container {
-  min-height: 100vh;
-  background-color: #f7fafc; /* Light gray background */
-}
-
-nav {
-  padding: 1rem;
-  background-color: #f8f9fa;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  display: inline;
-  margin-right: 1rem;
-}
-
-a {
-  text-decoration: none;
-  color: #42b983;
-}
-
-a.router-link-exact-active {
-  font-weight: bold;
-}
-</style>

@@ -1,65 +1,144 @@
 <template>
-  <nav class="navbar">
-    <div class="navbar-container">
+  <nav class="bg-[#253B06] px-4 py-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo Section -->
-      <div class="logo-container">
+      <div class="flex items-center gap-2">
         <img 
           src="/HuellasFelices.png" 
           alt="Huellas Felices Logo" 
-          class="logo"
+          class="h-12 w-auto"
         />
       </div>
 
-      <!-- Search Bar -->
-      <div class="search-container">
-        <input
-          type="text"
-          placeholder="Buscar mascotas"
-          class="search-input"
-          v-model="searchQuery"
-        />
-        <Search class="search-icon" :size="20" />
-      </div>
+      <!-- Mobile Menu Button -->
+      <button 
+        @click="toggleMobileMenu"
+        class="lg:hidden text-[#FFFFFF] hover:text-[#FFCD3C] transition-colors cursor-pointer"
+      >
+        <Menu v-if="!isMobileMenuOpen" :size="24" />
+        <X v-else :size="24" />
+      </button>
 
-      <!-- Navigation Links -->
-      <div class="nav-links">
-        <router-link 
-          v-for="link in links" 
-          :key="link.name"
-          :to="link.path"
-          class="nav-link"
-        >
-          {{ link.name }}
-        </router-link>
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center flex-1 justify-between">
+        <!-- Search Bar -->
+        <div class="relative flex-1 max-w-xl mx-8">
+          <input
+            type="text"
+            placeholder="Buscar mascotas"
+            class="w-full px-4 py-2 rounded-md pl-10 bg-[#FFFFFF]"
+            v-model="searchQuery"
+          />
+          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#BDBDBD]" :size="20" />
+        </div>
 
-        <!-- Donate Button -->
-        <router-link to="/donation" class="donate-button">
-          DONA
-          <Heart :size="16" />
-        </router-link>
-
-        <!-- User Menu -->
-        <div class="user-menu" v-click-outside="closeDropdown">
-          <button 
-            @click="toggleDropdown"
-            class="user-menu-button"
-          >
-            <User :size="24" />
-          </button>
-
-          <!-- Dropdown Menu -->
-          <div 
-            v-if="isDropdownOpen"
-            class="dropdown-menu"
-          >
+        <!-- Navigation Links -->
+        <div class="flex items-center gap-6">
           <router-link 
-            v-for="link in menuItems" 
+            v-for="link in links" 
             :key="link.name"
             :to="link.path"
-            class="dropdown-item"
+            class="text-[#FFFFFF] hover:text-[#FFCD3C] transition-colors"
+            :class="{ 'text-[#FFCD3C]': isActive(link.path) }"
           >
             {{ link.name }}
           </router-link>
+
+          <!-- Donate Button -->
+          <router-link to="/donation" class="bg-[#FF9234] text-[#FFFFFF] px-3 py-1 rounded-full flex items-center gap-2 hover:bg-[#FFCD3C] transition-colors">
+            DONA
+            <Heart :size="16" />
+          </router-link>
+
+          <!-- User Menu -->
+          <div class="relative" v-click-outside="closeDropdown">
+            <button 
+              @click="toggleDropdown"
+              class="text-[#FFFFFF] hover:text-[#FFCD3C] transition-colors cursor-pointer"
+            >
+              <User :size="24" />
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div 
+              v-if="isDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-[#FFFFFF] rounded-md shadow-lg py-1 z-50"
+            >
+              <router-link 
+                v-for="link in menuItems" 
+                :key="link.name"
+                :to="link.path"
+                class="block px-4 py-2 text-sm text-[#253B06] hover:bg-[#FAFCB4]"
+                :class="{ 'bg-[#FAFCB4]': isActive(link.path) }"
+              >
+                {{ link.name }}
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div 
+      v-if="isMobileMenuOpen"
+      class="lg:hidden fixed inset-0 bg-[#253B06] z-40 pt-20"
+    >
+      <div class="px-4 py-2 space-y-4">
+        <!-- Close Button -->
+        <button 
+          @click="closeMobileMenu"
+          class="absolute top-4 right-4 text-[#FFFFFF] hover:text-[#FFCD3C] hover:cursor-pointer transition-colors"
+        >
+          <X :size="24" />
+        </button>
+
+        <!-- Mobile Search -->
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar mascotas"
+            class="w-full px-4 py-2 rounded-md pl-10 bg-[#FFFFFF]"
+            v-model="searchQuery"
+          />
+          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#BDBDBD]" :size="20" />
+        </div>
+
+        <!-- Mobile Navigation Links -->
+        <div class="flex flex-col gap-4">
+          <router-link 
+            v-for="link in links" 
+            :key="link.name"
+            :to="link.path"
+            class="text-[#FFFFFF] hover:text-[#FFCD3C] transition-colors text-lg"
+            :class="{ 'text-[#FFCD3C]': isActive(link.path) }"
+            @click="closeMobileMenu"
+          >
+            {{ link.name }}
+          </router-link>
+
+          <!-- Mobile Donate Button -->
+          <router-link 
+            to="/donation" 
+            class="bg-[#FF9234] text-[#FFFFFF] px-3 py-2 rounded-full flex items-center justify-center gap-2 hover:bg-[#FFCD3C] transition-colors"
+            @click="closeMobileMenu"
+          >
+            DONA
+            <Heart :size="16" />
+          </router-link>
+
+          <!-- Mobile User Menu -->
+          <div class="border-t border-[#FFFFFF]/20 pt-4">
+            <router-link 
+              v-for="link in menuItems" 
+              :key="link.name"
+              :to="link.path"
+              class="block py-2 text-[#FFFFFF] hover:text-[#FFCD3C] transition-colors"
+              :class="{ 'text-[#FFCD3C]': isActive(link.path) }"
+              @click="closeMobileMenu"
+            >
+              {{ link.name }}
+            </router-link>
           </div>
         </div>
       </div>
@@ -68,12 +147,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Search, Heart, User } from 'lucide-vue-next'
+import { ref, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { Search, Heart, User, Menu, X } from 'lucide-vue-next'
+
+const route = useRoute()
 
 // State
 const searchQuery = ref('')
 const isDropdownOpen = ref(false)
+const isMobileMenuOpen = ref(false)
 
 // Dropdown menu items
 const menuItems = [
@@ -99,152 +182,46 @@ const closeDropdown = () => {
   isDropdownOpen.value = false
 }
 
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+  document.body.style.overflow = ''
+}
+
+const isActive = (path: string) => {
+  return route.path === path
+}
+
+// Cleanup on component unmount
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
 </script>
 
 <style scoped>
-.navbar {
-  background-color: #253B06;
-  padding: 0.5rem 1rem;
+/* Prevent scroll when mobile menu is open */
+:root {
+  overflow-y: auto;
 }
 
-.navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Smooth transitions for mobile menu */
+.fixed {
+  transition: all 0.3s ease-in-out;
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logo {
-  height: 3rem;
-  width: auto;
-}
-
-.search-container {
-  position: relative;
-  flex: 1;
-  max-width: 36rem;
-  margin: 0 2rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.5rem 1rem 0.5rem 2.5rem;
-  border-radius: 0.375rem;
-  border: none;
-  background-color: #FFFFFF;
-}
-
-.search-icon {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #BDBDBD;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.nav-link {
-  color: #FFFFFF;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover, .nav-link.router-link-active {
-  color: #FFCD3C;
-}
-
-.donate-button {
-  background-color: #FF9234;
-  color: #FFFFFF;
-  padding: 0.3rem 1rem;
-  text-decoration: none;
-  border-radius: 1rem;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.donate-button:hover {
-  background-color: #e58129;
-}
-
-.user-menu {
-  position: relative;
-}
-
-.user-menu-button {
-  color: #FFFFFF;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.user-menu-button:hover {
-  color: #FFCD3C;
-}
-
-.dropdown-menu {
-  position: absolute;
-  right: 0;
-  top: 100%;
-  margin-top: 0.5rem;
-  width: 12rem;
-  background-color: #FFFFFF;
-  border-radius: 0.375rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 0.5rem 1rem;
-  color: #253B06;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.dropdown-item:hover {
-  background-color: #FAFCB4;
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-container {
-    margin: 1rem 0;
-  }
-
-  .nav-links {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .nav-link, .donate-button {
-    text-align: center;
-    padding: 0.5rem;
-  }
-
-  .user-menu {
-    margin-top: 1rem;
+/* Optional: Add backdrop blur to mobile menu */
+@supports (backdrop-filter: blur(4px)) {
+  .fixed {
+    backdrop-filter: blur(4px);
+    background-color: rgba(37, 59, 6, 0.95);
   }
 }
 </style>

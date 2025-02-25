@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-      <h1 class="title">Adopters Page</h1>
+    <div class="p-4">
+    <h1 class="text-2xl font-bold">Adopters Page</h1>
     </div>
   </template>
   
