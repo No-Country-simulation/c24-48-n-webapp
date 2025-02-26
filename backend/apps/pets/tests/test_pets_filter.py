@@ -15,7 +15,7 @@ class PetsFilterTests(TestCase):
         Configuración inicial de los casos de prueba.
         """
         self.client = APIClient()
-        self.url = reverse('filter')
+        self.url = reverse('pets_filter')
         self.faker = Faker()
 
         Pets.objects.create(

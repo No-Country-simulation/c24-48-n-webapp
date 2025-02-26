@@ -147,14 +147,14 @@ python manage.py runserver --settings=config.settings.development
 
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
-| [Filtrar Mascotas](#filtrar-mascotas) | `GET` | `/api/pets` | Endpoint para el filtro de mascotas con diferentes parámetros en la API. |
+| [Filtrar Mascotas](#filtrar-mascotas) | `GET` | `/api/pets/filter` | Endpoint para el filtro de mascotas con diferentes parámetros en la API. |
 
 #### Filtrar Mascotas
 
 ##### Método HTTP
 
 ```http
-GET /api/pets
+GET /api/pets/filter
 ```
 
 ##### Query Params
@@ -171,7 +171,7 @@ GET /api/pets
 
 > **NOTA**: Si los parámetros `page_size` y `page` no se incluyen en la URL, se aplicarán valores por defecto:
 >
-> - **Ejemplo**: `GET /api/job_offers/all`
+> - **Ejemplo**: `GET /api/pets/filter`
 >   - **page_size** será `10`, lo que significa que se mostrarán 10 elementos por página.
 >   - **page** será `1`, comenzando en la primera página de la paginación.
 >

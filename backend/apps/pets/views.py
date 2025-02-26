@@ -9,7 +9,7 @@ from config.settings.base import REST_FRAMEWORK
 
 # Endpoint para búsqueda de mascotas
 @api_view(['GET'])
-def filter(request):
+def pets_filter(request):
     # Obtiene los parámetros de filtro de la solicitud
     filters = {
         'age__icontains': request.query_params.get('age'),
