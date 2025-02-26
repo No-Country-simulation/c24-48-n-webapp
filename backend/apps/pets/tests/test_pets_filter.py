@@ -17,7 +17,6 @@ class PetsFilterTests(TestCase):
         self.client = APIClient()
         self.url = reverse('pets_filter')
         self.faker = Faker()
-
         Pets.objects.create(
             name=self.faker.name(),
             age=3,
