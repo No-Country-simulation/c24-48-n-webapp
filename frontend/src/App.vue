@@ -1,8 +1,8 @@
 <template>
   <div id="app" class="min-h-screen bg-[#F7FAFC] flex flex-col">
-    <Navbar />
+    
     <router-view class="flex-grow" />
-    <Footer />
+    
   </div>
 </template>
 
