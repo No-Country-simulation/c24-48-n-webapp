@@ -2,5 +2,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('pets/filter', views.filter, name='pets_filter')
+    path('pets/filter', views.pets_filter, name='pets_filter')
 ]

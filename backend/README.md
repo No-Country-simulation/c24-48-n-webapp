@@ -18,6 +18,7 @@ API REST desarrollada con Django y Django REST Framework. Su propósito es gesti
     - [Entorno Local](#entorno-local)
 - [Endpoints](#endpoints)
   - [Mascotas](#mascotas)
+  - [Citas](#citas)
 
 ## Instalación
 
@@ -230,6 +231,60 @@ Content-Type: application/json
       }
     ]
   }
+}
+```
+
+### Citas
+
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
+| [Agendar citas](#agendar-citas) | `POST` | `/api/appointment/schedule` | Endpoint para agendar citas en la API. |
+
+#### Agendar Citas
+
+##### Método HTTP
+
+```http
+POST api/appointment/schedule
+```
+
+##### Headers
+
+| Header           | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticación del usuario |
+
+
+##### Parámetros
+
+| Parámetro | Tipo     | Descripción                |
+| :-------- | :------- | :------------------------- |
+| `datetime` | `datetime` | **Requerido**. Fecha para la cita |
+| `user` | `int` | **Requerido**. ID del usuario que hace la cita |
+| `pet` | `int` | **Requerido**. ID de la mascota por la que se hace la cita |
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <your_token_key>
+Content-Type: application/json
+
+{
+  "datetime": "2025-03-01T11:00:00Z",
+  "user": 1,
+  "pet": 1
+}
+```
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "status": "success",
+  "message": "Appointment successfully scheduled."
 }
 ```
 
