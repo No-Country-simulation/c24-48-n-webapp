@@ -239,6 +239,7 @@ Content-Type: application/json
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
 | [Agendar citas](#agendar-citas) | `POST` | `/api/appointment/schedule` | Endpoint para agendar citas en la API. |
+| [Aceptar o rechazar citas](#aceptar-o-rechazar-citas) | `POST` | `/api/appointment/{appointment_id}/status` | Endpoint para aceptar o rechazar citas en la API. |
 
 #### Agendar Citas
 
@@ -285,6 +286,54 @@ Content-Type: application/json
 {
   "status": "success",
   "message": "Appointment successfully scheduled."
+}
+```
+
+#### Aceptar o Rechazar Citas
+
+##### Método HTTP
+
+```http
+POST api/appointment/{appointment_id}/status
+```
+
+##### Headers
+
+| Header           | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticación del usuario |
+
+##### Parámetros
+
+| Parámetro | Tipo     | Descripción                |
+| :-------- | :------- | :------------------------- |
+| `status`  | `string` | **Requerido**. Estado de la cita |
+
+> **NOTA**: El parámetro `status` solo acepta los siguientes parámetros:
+>
+> - **CONFIRMED**: Para aceptar las citas agendadas.
+> - **CANCELLED**: Para rechazar las citas agendadas.
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <your_token_key>
+Content-Type: application/json
+
+{
+  "status": "CONFIRMED"
+}
+```
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "status": "success",
+  "message": "Appointment successfully confirmed."
 }
 ```
 
