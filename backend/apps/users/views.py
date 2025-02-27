@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from django.contrib.auth.models import User
-from .serializer import UserSerializer, UserUpdateSerializer
+from .serializer import UserSerializer
 from  rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -31,44 +31,41 @@ def user_register(request):
                   o errores de validación si no.
     '''
     context = {'validate_email': request.data.get('validate_email', True)}
-    user_serializer = UserSerializer(data=request.data, context= context) 
+    user_serializer = UserSerializer(data=request.data, context=context) 
     
-    #Validacion
-    if user_serializer.is_valid():
-        user_serializer.save()
-        
-        #Recupera usuario
-        user = User.objects.get(id=user_serializer.data['id'])
-        
-        #setea password para encriptacion
-        user.set_password(user_serializer.data['password'])
-        user.save()
-        
-        #Se asocia token al usuario
-        token = Token.objects.create(user=user)
-        
-        user_serializer =UserSerializer(user)
-        return Response({
-            'status': 'success', 
-            'message': 'User registered successfully.', 
-            'data': {
-                'token': token.key, 
-                'user': user_serializer.data
-                    }
-                }, status=status.HTTP_201_CREATED)
-    
-    else:
-        error = user_serializer.errors
+    # Validación
+    if not user_serializer.is_valid():
         return Response({
             'status': 'error', 
             'message': user_serializer.errors 
-            }, status=status.HTTP_400_BAD_REQUEST)
+        }, status=status.HTTP_400_BAD_REQUEST)
 
+    user_serializer.save()
+    
+    # Recupera usuario
+    user = User.objects.get(id=user_serializer.data['id'])
+    
+    # Setea password para encriptación
+    user.set_password(user_serializer.data['password'])
+    user.save()
+    
+    # Se asocia token al usuario
+    token = Token.objects.create(user=user)
+    
+    #user_serializer = UserSerializer(user_serializer)
+    return Response({
+        'status': 'success', 
+        'message': 'User registered successfully.', 
+        'data': {
+            'token': token.key, 
+            'user': user_serializer.data
+        }
+    }, status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def user_update(request, pk=None):
+def user_update(request):
     '''
     Actualiza un usuario existente con los datos proporcionados.
 
@@ -85,61 +82,57 @@ def user_update(request, pk=None):
                   o errores de validación si la solicitud no es válida,
                   o un mensaje de error si el usuario no existe.
     '''
-    #queryset
-    user = User.objects.filter(id = pk).first()
+    user = request.user
 
-    #validacion
-    if user:
-        #Realiza los cambios enviados             
-        user_serializer = UserUpdateSerializer(user, data=request.data)
-        if user_serializer.is_valid():
-            user_serializer.save()
-            return Response({
-                'status': 'success', 
-                'message': 'User update successfully.', 
-                'data': {
-                    'user': user_serializer.data
-                    }
-                })
-
+    if not user:
         return Response({
-        'status': 'error', 
-        'message': user_serializer.errors
-            })
-    else:
+            'status': 'error', 
+            'message': 'User does not exist.'
+        }, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({
-        'status': 'error', 
-        'message': 'User does not exist.'
-            }, status=status.HTTP_400_BAD_REQUEST)
+    user_serializer = UserSerializer(user, data=request.data, partial= True)
     
+    if not user_serializer.is_valid():
+        return Response({
+            'status': 'error', 
+            'message': user_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+            
+    user_serializer.save()
+    return Response({
+        'status': 'success', 
+        'message': 'User update successfully.', 
+        'data': {
+            'user': user_serializer.data
+        }
+    }, status=status.HTTP_200_OK)
+  
 @api_view(['DELETE'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def user_delete(request, pk=None):
+def user_delete(request):
     '''
-    Elimina un usuario existente.
+    Elimina el usuario autenticado.
 
     Parameters:
         request (HttpRequest): Solicitud HTTP para eliminar el usuario.
-        pk (int): ID del usuario a eliminar.
-
-    Attributes:
-        user (User): Instancia del modelo User correspondiente al usuario especificado.
 
     Returns:
         Response: Mensaje de confirmación si la eliminación es exitosa,
                   o un mensaje de error si el usuario no existe.
     '''
-     
-    #queryset
-    user = User.objects.filter(id = pk).first()  
-    if user:
-        #borra usuario
-        user.delete()
-        return Response({'message': 'User has been deleted.'}, status=status.HTTP_200_OK)
-    else:
-        return Response({'message': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+    user=request.user
+    if not user:
+        return Response({
+            'status':'error', 
+            'message': 'User does not exist.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    user.delete()
+    return Response({
+        'status':'success', 
+        'message': 'User has been deleted.'
+    }, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -162,73 +155,86 @@ def user_login(request):
     try:
         user = User.objects.get(email=request.data['email'])
         #validacion password
-        if user.check_password(request.data['password']):
-            #validacion de activ
-            if user.is_active:
-                #Se asocia token al usuario
-                token, created = Token.objects.get_or_create(user=user)
-                user_serializer = UserSerializer(user)
-                #si token ya existe, no deja iniciar sesion
-                if created:
-                    #envio de json con usuario y token
-                    return Response({
-                        'status': 'success', 
-                        'message': 'User login successfully.', 
-                        'data': {
-                            'token': token.key, 
-                            'user': user_serializer.data}
-                            }, status= status.HTTP_200_OK)
-                else:
-                    token.delete()
-                    return Response({
-                        'status': 'error', 
-                        'message': 'user has already logged in.'
-                        }, status= status.HTTP_409_CONFLICT)
-            else:
-                return Response({
-                    'status': 'error', 
-                    'message': 'Inactive user.'
-                    }, status= status.HTTP_409_CONFLICT)
-
-        else:
+        if not user.check_password(request.data['password']):
             return Response({
                 'status': 'error', 
                 'message': 'invalid password.'
-                }, status= status.HTTP_400_BAD_REQUEST)
-    
+            }, status= status.HTTP_400_BAD_REQUEST)
+        
+        if not user.is_active:
+            return Response({
+                'status': 'error', 
+                'message': 'Inactive user.'
+            }, status= status.HTTP_409_CONFLICT)
+
+        token, created = Token.objects.get_or_create(user=user)
+        user_serializer = UserSerializer(user)
+        
+        '''#validacion para unico inicio de sesion
+        if not created:
+            token.delete()
+            return Response({
+                'status': 'error', 
+                'message': 'user has already logged in.'
+            }, status= status.HTTP_409_CONFLICT)'''
+
+        return Response({
+            'status': 'success',
+            'message': 'User login successfully.',
+            'data': {
+                'token': token.key,
+                'user': user_serializer.data
+            }
+        }, status=status.HTTP_200_OK)
+
     except User.DoesNotExist:
         return Response({
             'status': 'error', 
             'message': 'User does not exist.'
-            }, status= status.HTTP_400_BAD_REQUEST)
+        }, status= status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def user_logout(request):
-    
+    '''
+    Maneja la solicitud de cierre de sesión del usuario autenticado.
+
+    Este endpoint permite al usuario autenticado cerrar sesión, eliminando el token de autenticación 
+    y cualquier sesión activa asociada con el usuario.
+
+    Parameters:
+        request (HttpRequest): Solicitud HTTP que contiene el token del usuario a ser eliminado en los datos.
+
+    Returns:
+        Response: 
+            - status: 'success', message: 'logout Ok.' con un código de estado 200 si la eliminación es exitosa.
+            - status: 'error', message: 'Token does not exist.' con un código de estado 400 si el token no existe.
+
+    '''
     token_key = request.data.get('key')
     token = Token.objects.filter(key=token_key).first()
-    print(token)
-    if token:
-        user = token.user
-        
-        all_session = Session.objects.filter(expire_date__gte = datetime.now())
-        if all_session.exists():
+    if not token:
+        return Response({
+            'status': 'error', 
+            'message': 'Token does not exist.'
+        }, status= status.HTTP_400_BAD_REQUEST)
+    
+    user = token.user
+    
+    #busca y elimina todas las sesiones activas (no expiradas)
+    all_session = Session.objects.filter(expire_date__gte = datetime.now())
+    if all_session.exists():
             for session in all_session:
                 session_data = session.get_decoded()
                 if user.id == int(session_data.get('_auth_user_id')):
                     session.delete()
         
-        token.delete()
-        return Response({
+    token.delete()
+    return Response({
             'status': 'success', 
             'message': 'logout Ok.'
-            }, status= status.HTTP_200_OK)
-
-    else:
-        return Response({
-            'status': 'error', 
-            'message': 'Token does not exist.'
-            }, status= status.HTTP_400_BAD_REQUEST)
+    }, status= status.HTTP_200_OK)
+    
+    

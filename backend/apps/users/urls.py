@@ -3,9 +3,9 @@ from .views import user_register, user_update, user_login, user_delete, user_log
 
 
 urlpatterns = [
-    path('user/register/', user_register, name = 'register_user'),
-    path('user/update/<int:pk>/', user_update, name = 'update_user'),
-    path('user/delete/<int:pk>/', user_delete, name = 'delete_user'),
-    path('user/login/', user_login, name = 'login_user'),
-    path('user/logout/', user_logout, name = 'logout_user'),
+    path('user/register/', user_register, name = 'user_register'),
+    path('user/update/', user_update, name = 'user_update'),
+    path('user/delete/', user_delete, name = 'user_delete'),
+    path('user/login/', user_login, name = 'user_login'),
+    path('user/logout/', user_logout, name = 'user_logout'),
     ]

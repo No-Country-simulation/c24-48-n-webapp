@@ -20,6 +20,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id','username', 'first_name', 'last_name', 'email', 'password', 'is_active']
         
+    def create(self, validated_data):
+        # Establece is_active a True por defecto
+        validated_data['is_active'] = True
+        user = User.objects.create(**validated_data)
+        user.is_active = True
+        user.save()
+        return user
+
 
     def __init__(self, *args, **kwargs):
         '''
@@ -62,29 +70,4 @@ class UserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Email already exists.")
         return value
         
-        
-class UserUpdateSerializer(serializers.ModelSerializer):
-    '''
-    Serializer para actualizar la información del usuario.
-
-    Atributos:
-        model (User): El modelo de usuario asociado a este serializer.
-        fields (list): Campos que serán incluidos en la serialización: 'id', 'username', 
-                       'first_name', 'last_name', 'email', 'is_active'.
-
-    Métodos:
-        validate_email(value):
-            Valida que el email proporcionado no exista ya en el sistema.
-            Si el email ya existe, levanta una ValidationError.
-    '''
-    class Meta():
-        model = User
-        fields = ['id','username', 'first_name', 'last_name', 'email', 'is_active']
-
-
-    def validate_email(self, value):
-        email = User.objects.filter(email=value)
-        if len(email) != 0:
-            raise serializers.ValidationError("Email already exists.")
-        return value
-
+     
