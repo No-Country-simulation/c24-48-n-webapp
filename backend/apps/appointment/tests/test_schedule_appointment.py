@@ -73,12 +73,12 @@ class ScheduleAppointmentTests(TestCase):
         self.assertTrue('message' in response.data)
 
 
-    def test_create_job_offer_without_token(self):
+    def test_schedule_appointment_without_token(self):
         """
-        Prueba de creación de oferta de trabajo sin token de autenticación.
+        Prueba de agendar cita sin token de autenticación.
 
         Verifica que el endpoint responda con un código de estado
-        401 cuando se intenta crear una oferta de trabajo sin un
+        401 cuando se intenta agendar una cita sin un
         token de autenticación.
         """
         self.client.credentials()
