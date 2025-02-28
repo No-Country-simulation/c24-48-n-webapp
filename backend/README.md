@@ -289,39 +289,96 @@ Content-Type: application/json
 }
 ```
 
-#### Aceptar o Rechazar Citas
+### Usuarios
 
-##### Método HTTP
+| Nombre | Metodo | URL | Descripci贸n |
+|:------ | :----- | :-- | :---------- |
+| [Registro de usuarios](#registro-usuarios) | `POST` | `/api/user/user_register` | Endpoint para el registro de usuarios. |
+
+#### Registro de usuarios
+
+##### Metodo HTTP
 
 ```http
-POST api/appointment/{appointment_id}/status
+POST /api/user/user_register/
 ```
 
-##### Headers
+##### Query Params
 
-| Header           | Tipo     | Descripción                |
+| Query Params     | Tipo     | Descripcion                |
 | :--------------- | :------- | :------------------------- |
-| `Authorization`  | `string` | **Requerido**. Token de autenticación del usuario |
-
-##### Parámetros
-
-| Parámetro | Tipo     | Descripción                |
-| :-------- | :------- | :------------------------- |
-| `status`  | `string` | **Requerido**. Estado de la cita |
-
-> **NOTA**: El parámetro `status` solo acepta los siguientes parámetros:
->
-> - **CONFIRMED**: Para aceptar las citas agendadas.
-> - **CANCELLED**: Para rechazar las citas agendadas.
+| `username`       | `string` | **Requerido**. Nombre del usuario |
+| `email`       | `email` | **Requerido**. Email del usuario |
+| `password`       | `string` | **Requerido**. Password del usuario |
+| `first_name`       | `string` | **Opcional**. Nombre del usuario |
+| `last_name`       | `string` | **Opcional**. Apellido del usuario |
+| `is_active`     | `bol`    | **Opcional**. Estado del usuario |
 
 ##### Ejemplo de solicitud
 
 ```http
-Authorization: Token <your_token_key>
+Content-Type: application/json
+  
+{
+  "username": "pepito",
+  "first_name": "pepe",
+  "last_name": "pepito",
+  "email": "pepito@pepito.com",
+  "password": "pepito"
+}
+```
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 201 CREATED
 Content-Type: application/json
 
 {
-  "status": "CONFIRMED"
+    "status": "success",
+    "message": "User registered successfully.",
+    "data": {
+        "token": "99db769eaf1600fa0ea77e0549a32890f41eb67c",
+        "user": {
+            "id": 36,
+            "username": "pepito",
+            "first_name": "pepe",
+            "last_name": "pepito",
+            "email": "pepito@pepito.com",
+            "password": "pepito",
+            "is_active": true
+        }
+    }
+}
+```
+
+| Nombre | M茅todo | URL | Descripcion |
+|:------ | :----- | :-- | :---------- |
+| [Login de usuarios](#login-usuarios) | `POST` | `/api/user/user_login` | Endpoint para el login de usuarios |
+
+#### Login de usuarios
+
+##### Metodo HTTP
+
+```http
+POST /api/user/user_login/
+```
+
+##### Query Params
+
+| Query Params     | Tipo     | Descripcion                |
+| :--------------- | :------- | :------------------------- |
+| `email`       | `email` | **Requerido**. Email del usuario |
+| `password`       | `string` | **Requerido**. Password del usuario |
+
+##### Ejemplo de solicitud
+
+```http
+Content-Type: application/json
+
+{
+  "email": "pepito@pepito.com",
+  "password": "pepito"
 }
 ```
 
@@ -332,9 +389,127 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "status": "success",
-  "message": "Appointment successfully confirmed."
+    "status": "success",
+    "message": "User login successfully.",
+    "data": {
+        "token": "99db769eaf1600fa0ea77e0549a32890f41eb67c",
+        "user": {
+            "id": 36,
+            "username": "pepito",
+            "first_name": "pepe",
+            "last_name": "pepito",
+            "email": "pepito@pepito.com",
+            "password": "pbkdf2_sha256$870000$yKoXvfAE4V5hF6bR1g0STy$sCMBsidoHQTLYU27c/+bBrOiBt2Jor2k/HLw7L3m7AA=",
+            "is_active": true
+        }
+    }
 }
 ```
 
----
+| Nombre | Metodo | URL | Descripcion |
+|:------ | :----- | :-- | :---------- |
+| [Actualizacion datos de usuarios](#actualizacion-usuarios) | `POST` | `/api/user/user_update` | Endpoint para actualizar datos de usuario. |
+
+#### Actualizacion datos de usuarios
+
+##### M茅todo HTTP
+
+```http
+POST /api/user/user_update/
+```
+
+##### Query Params
+
+| Query Params     | Tipo     | Descripcion                |
+| :--------------- | :------- | :------------------------- |
+| `username`       | `string` | **Opcional**. Nuevo nombre del usuario |
+| `email`       | `email` | **Opcional**. Nuevo email del usuario |
+| `password`       | `string` | **Opcional**. Nuevo password del usuario |
+| `first_name`       | `string` | **Opcional**. Nuevo nombre del usuario |
+| `last_name`       | `string` | **Opcional**. Nuevo apellido del usuario |
+| `is_active`     | `bol`    | **Opcional**. Nuevo estado del usuario |
+| `page_value`     | `int`    | **Opcional**. Nuevo valor de la pagina para navegar entre la paginacion |
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <your_token_key>
+Content-Type: application/json
+
+{
+  "username": "pepe2",
+  "first_name": "pepito2",
+  "last_name": "pepito"
+}
+```
+
+##### Headers
+
+| Header           | Tipo     | Descripcion                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticacion del usuario |
+
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "status": "success",
+    "message": "User update successfully.",
+    "data": {
+        "user": {
+            "id": 36,
+            "username": "pepe2",
+            "first_name": "pepito2",
+            "last_name": "pepito",
+            "email": "pepito@pepito.com",
+            "password": "pbkdf2_sha256$870000$yKoXvfAE4V5hF6bR1g0STy$sCMBsidoHQTLYU27c/+bBrOiBt2Jor2k/HLw7L3m7AA=",
+            "is_active": true
+        }
+    }
+}
+```
+
+| Nombre | Metodo | URL | Descripcion |
+|:------ | :----- | :-- | :---------- |
+| [Borrar usuarios](#borrar-usuarios) | `POST` | `/api/user/user_delete` | Endpoint para borrar usuario. |
+
+#### Borrar usuarios
+
+##### Metodo HTTP
+
+```http
+POST /api/user/user_delete/
+```
+
+##### Query Params
+
+**NOTA**: Sin parametros, solo se envia el [headers]:
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <your_token_key>
+Content-Type: application/json
+```
+##### Headers
+
+| Header           | Tipo     | Descripci贸n                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticaci贸n del usuario |
+
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  'status':'success', 
+  'message': 'User has been deleted.'
+}
+```
