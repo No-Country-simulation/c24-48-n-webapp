@@ -3,8 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.core.utils.custom_pagination import CustomPageNumberPagination
 from .models import Pets
-from .serializers import PetsResponseSerializer
+from .serializers import PetsResponseSerializer, PhotosPetsResponseSerializer
 from config.settings.base import REST_FRAMEWORK
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAdminOrStaff
+from rest_framework.authentication import TokenAuthentication
 
 
 # Endpoint para búsqueda de mascotas
@@ -56,3 +59,100 @@ def pets_filter(request):
             'pets': response_data['results']
         }
     }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAdminOrStaff])
+def pet_register(request):
+    
+    pet_serializer = PetsResponseSerializer(data = request.data)
+    if not pet_serializer.is_valid():
+        return Response({
+            'status': 'error', 
+            'message': pet_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    pet_serializer.save()
+    
+    return Response({
+        'status': 'success', 
+        'message': 'Pet registered successfully.', 
+        'data': {
+            'Pet': pet_serializer.data
+        }
+    }, status=status.HTTP_201_CREATED)
+    
+@api_view(['PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAdminOrStaff])
+def pet_update(request):
+    pk = request.data.get('pk')
+    if not pk:
+        return Response({
+            'status': 'error',
+            'message': 'No pk provided in the request.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    pet_serializer = PetsResponseSerializer(data=request.data) 
+    if not pet_serializer.is_valid:
+        return Response({
+            'status': 'error',
+            'message': pet_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST) 
+    
+    pet_serializer.save()       
+    return Response({
+        'status': 'error',
+        'message': pet_serializer.data
+    }, status=status.HTTP_200_OK) 
+
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAdminOrStaff])
+def pet_upload_photos(request):
+    
+    pet_photos_serializer = PhotosPetsResponseSerializer(data = request.data)
+    if not pet_photos_serializer.is_valid():
+        return Response({
+            'status': 'error', 
+            'message': pet_photos_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    pet_photos_serializer.save()
+    
+    return Response({
+        'status': 'success', 
+        'message': 'Pet registered successfully.', 
+        'data': {
+            'Pet': pet_photos_serializer.data
+        }
+    }, status=status.HTTP_201_CREATED)
+
+@api_view(['DELETE'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAdminOrStaff])
+def pet_delete(request):
+    pk = request.data.get('pk')
+    if not pk:
+        return Response({
+            'status': 'error',
+            'message': 'No pk provided in the request.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        pet = Pets.objects.get(pk=pk)
+    
+    except Pets.DoesNotExist:
+        return Response({
+            'status': 'error',
+            'message': 'Pet does not exist.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    pet.delete()
+    return Response({
+        'status': 'success',
+        'message': 'Pet has been deleted.'
+    }, status=status.HTTP_204_NO_CONTENT)
+    
+
