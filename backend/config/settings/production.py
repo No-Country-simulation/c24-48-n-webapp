@@ -2,7 +2,6 @@ from config.logging import *
 from config.settings.base import *
 from dotenv import load_dotenv
 import os
-from urllib.parse import urlparse
 
 load_dotenv(Path.joinpath(BASE_DIR,'.env'))
 
@@ -14,9 +13,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [ '*' ]
 
-
-
-url = urlparse(os.environ["DATABASE_URL"])
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
