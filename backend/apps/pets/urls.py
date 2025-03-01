@@ -7,5 +7,5 @@ urlpatterns = [
     path('pet/register/', pet_register, name = 'pet_register'),
     path('pet/update/', pet_update, name = 'pet_update'),
     path('pet/delete/', pet_delete, name = 'pet_delete'),
-    path('pet/delete/', pet_upload_photos, name = 'pet_upload_photos'),
+    path('pet/upload_photos/', pet_upload_photos, name = 'pet_upload_photos'),
 ]
