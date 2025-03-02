@@ -219,7 +219,7 @@ Content-Type: application/json
 
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
-| [Actualizar Mascota](#actualizar-mascota) | `POST` | `/api/pets/update` | Endpoint para el actualizar mascotas. |
+| [Actualizar Mascota](#actualizar-mascota) | `POST` | `/api/pets/update` | Endpoint para el actualizar mascota. |
 
 #### Actualizar mascota
 
@@ -288,7 +288,7 @@ Content-Type: application/json
 
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
-| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/delete` | Endpoint para el borrado de mascotas. |
+| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/delete` | Endpoint para el borrado de mascota. |
 
 #### Borrar mascota
 
@@ -400,14 +400,14 @@ Content-Type: application/json
 ```
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
-| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/delete` | Endpoint para el borrado de mascotas. |
+| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/pets_available` | Endpoint para el borrado de mascotas. |
 
 #### Borrar mascota
 
 ##### Método HTTP
 
 ```http
-POST /api/pets/delete
+POST /api/pets/pets_available
 ```
 ##### Query Params
 
@@ -460,12 +460,7 @@ Content-Type: application/json
     }
   }
 }
-
-
-
-
-
-
+```
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
 | [Filtrar Mascotas](#filtrar-mascotas) | `GET` | `/api/pets/filter` | Endpoint para el filtro de mascotas con diferentes parámetros en la API. |
