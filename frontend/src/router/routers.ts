@@ -9,6 +9,7 @@ import DonationView from '@/views/DonationView.vue';
 import AdminView from '@/views/AdminView.vue';
 import AdoptersView from '@/views/AdoptersView.vue';
 import AccountView from '@/views/AccountView.vue';
+import LoginView from '@/views/LoginView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/schedule',
     name: 'Schedule',
     component: ScheduleView,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView,
   },
   {
     path: '/register',
