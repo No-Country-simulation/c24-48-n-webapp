@@ -10,6 +10,8 @@ import AdminView from '@/views/AdminView.vue';
 import AdoptersView from '@/views/AdoptersView.vue';
 import AccountView from '@/views/AccountView.vue';
 import LoginView from '@/views/LoginView.vue';
+import DashboardView from '@/views/DashboardView.vue';
+import AddPetsView from '@/views/AddPetsView.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -61,6 +63,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/account',
     name: 'Account',
     component: AccountView,
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: DashboardView,
+  },
+  {
+    path: '/pets/add',
+    name: 'AddPets',
+    component: AddPetsView,
   },
 ];
 
