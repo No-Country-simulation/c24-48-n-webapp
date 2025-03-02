@@ -19,8 +19,6 @@ db.sqlite3
 *.sqlite3
 *.db
 
-**/migrations/
-
 local_settings.py
 
 pip-log.txt

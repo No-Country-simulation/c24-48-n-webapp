@@ -46,3 +46,21 @@ class PetsResponseSerializer(serializers.ModelSerializer):
             'update_at',
             'photos'
         ]
+
+class PhotosPetSerializer(serializers.ModelSerializer):
+    """
+    Serializador para la respuesta de los datos de fotos de las mascotas.
+    """
+    # Relaciona cada foto con una mascota existente mediante su ID.
+    pet_id = serializers.PrimaryKeyRelatedField(queryset=Pets.objects.all(), source='pet')
+    
+    class Meta:
+        """
+        Metadatos del serializador.
+
+        Attributes:
+            model (PhotosPets): Modelo de las fotos de la mascotas.
+            fields (list): Campos del serializador.
+        """
+        model = PhotosPets
+        fields = ['photo', 'pet_id']

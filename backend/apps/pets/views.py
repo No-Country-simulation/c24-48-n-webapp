@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.core.utils.custom_pagination import CustomPageNumberPagination
 from .models import Pets
-from .serializers import PetsResponseSerializer, PhotosPetsResponseSerializer
+from .serializers import PetsResponseSerializer, PhotosPetsResponseSerializer, PhotosPetSerializer
 from config.settings.base import REST_FRAMEWORK
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAdminOrStaff
@@ -122,7 +122,10 @@ def pet_update(request):
     # Respuesta exitosa al actualizar la mascota
     return Response({
         'status': 'success',
-        'message': pet_serializer.data
+        'message': 'Pet updated successfully.',
+        'data': {
+            'Pet': pet_serializer.data
+        }
     }, status=status.HTTP_200_OK)
 
 
@@ -132,8 +135,18 @@ def pet_update(request):
 @permission_classes([IsAdminOrStaff])
 def pet_upload_photos(request):
     
+    # Obtiene el valor de la clave primaria (pk) desde los datos de la solicitud
+    pk = request.data.get('pk')
+    
+    # Verifica si no se proporcionó la clave primaria en la solicitud
+    if not pk:
+        return Response({
+            'status': 'error',
+            'message': 'No pk provided in the request.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     # Serializa los datos enviados en la solicitud utilizando PhotosPetsResponseSerializer
-    pet_photos_serializer = PhotosPetsResponseSerializer(data=request.data)
+    pet_photos_serializer = PhotosPetSerializer(data=request.data)
     
     # Verifica si los datos no son válidos
     if not pet_photos_serializer.is_valid():
@@ -143,13 +156,19 @@ def pet_upload_photos(request):
             'message': pet_photos_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
     
-    # Guarda los datos si la validación es exitosa
-    pet_photos_serializer.save()
-    
+    try:
+        # Guarda los datos si la validación es exitosa
+        pet_photos_serializer.save()
+    except:
+        return Response({
+            'status': 'error', 
+            'message': 'An error occurred while saving the photo.'
+        }, status=status.HTTP_400_BAD_REQUEST)        
+
     # Respuesta exitosa al registrar la mascota con las fotos
     return Response({
         'status': 'success', 
-        'message': 'Pet registered successfully.', 
+        'message': 'Photo pet updated successfully.', 
         'data': {
             'Pet': pet_photos_serializer.data
         }
@@ -195,7 +214,7 @@ def pet_delete(request):
     
 # Endpoint para visualizacion de mascotas disponibles  
 @api_view(['GET'])
-def pet_get_available(request):
+def pets_get_available(request):
     
     # Obtiene las mascotas available
     pets = Pets.objects.filter(status = 'available')

@@ -148,6 +148,326 @@ python manage.py runserver --settings=config.settings.development
 
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
+| [Registro Mascotas](#registro-mascotas) | `POST` | `/api/pets/registro` | Endpoint para el registro de mascotas. |
+
+#### Registro Mascotas
+
+##### Método HTTP
+
+```http
+GET /api/pets/registro
+```
+##### Query Params
+
+| Query Params     | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `age`       | `int` | **Opcional**. Edad de la mascota |
+| `size`       | `string` | **Opcional**. Tamaño de la mascota |
+| `breed`       | `string` | **Opcional**. Raza de la mascota |
+| `health_status`       | `string` | **Opcional**. Estado de salud de la mascota |
+| `status`       | `string` | **Opcional**. Estado de la mascota |
+| `size_value`     | `int`    | **Opcional**. Valor del tamaño de elementos por página |
+| `page_value`     | `int`    | **Opcional**. Valor de la página para navegar entre la paginación |
+
+
+> **NOTA**: Solo acceden usuarios staff o admin
+
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <admin_o_staff_token_key>
+Content-Type: application/json
+
+{
+  "age": 5,
+  "size": "medium",
+  "breed": "labrador",
+  "health_status": "healthy",
+  "status": "adoptable"
+}
+```
+
+##### Headers
+
+| Header           | Tipo     | Descripcion                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticacion de admin o staff |
+
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+  'status': 'success', 
+  'message': 'Pet registered successfully.', 
+  'data': {
+    'Pet': {
+      "id": "12",
+      "age": 5,
+      "size": "medium",
+      "breed": "labrador",
+      "health_status": "healthy",
+      "status": "adoptable"
+    }
+  }
+}
+```
+
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
+| [Actualizar Mascota](#actualizar-mascota) | `POST` | `/api/pets/update` | Endpoint para el actualizar mascotas. |
+
+#### Actualizar mascota
+
+##### Método HTTP
+
+```http
+POST /api/pets/update
+```
+##### Query Params
+
+| Query Params     | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `pk`       | `int` | **Requerido**. id de la mascota a actualizar |
+| `age`       | `int` | **Opcional**. Nueva edad de la mascota |
+| `size`       | `string` | **Opcional**. Nueva tamaño de la mascota |
+| `breed`       | `string` | **Opcional**. Nueva raza de la mascota |
+| `health_status`       | `string` | **Opcional**. Nueva estado de salud de la mascota |
+| `status`       | `string` | **Opcional**. Nueva estado de la mascota |
+
+> **NOTA**: Solo permisos a usuarios staff o admin.
+
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token <admin_o_staff_token_key>
+Content-Type: application/json
+
+{
+  "pk": 5
+  "age": 6,
+  "status": "Pending"
+}
+```
+
+##### Headers
+
+| Header           | Tipo     | Descripcion                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticacion de admin o staff |
+
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+{
+  'status': 'success', 
+  'message': 'Pet updated successfully.', 
+  'data': {
+    'Pet': {
+      "id": "12",
+      "age": 6,
+      "size": "medium",
+      "breed": "labrador",
+      "health_status": "healthy",
+      "status": "Pending"
+    }
+  }
+}
+}
+```
+
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
+| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/delete` | Endpoint para el borrado de mascotas. |
+
+#### Borrar mascota
+
+##### Método HTTP
+
+```http
+POST /api/pets/delete
+```
+##### Query Params
+
+| Query Params     | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `pk`       | `int` | **Requerido**. id de la mascota a eliminar. |
+
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token Token <admin_o_staff_token_key>
+Content-Type: application/json
+
+{
+  "pk": 5
+}
+```
+##### Headers
+
+| Header           | Tipo     | Descripci贸n                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticacion de admin o staff |
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  'status':'success', 
+  'message': 'Pet has been deleted.'
+}
+```
+
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
+| [disponibles Mascotas](#disponibles-mascotas) | `GET` | `/api/pets/pets_available` | Endpoint retorna lista de mascotas disponibles para adopcion. |
+
+#### Disponibles Mascotas
+
+##### Método HTTP
+
+```http
+GET /api/pets/pets_available
+```
+##### Ejemplo de solicitud
+
+```http
+Content-Type: application/json
+```
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+  "status": "success",
+  "message": "The pets available were successfully obtained.",
+  "data": {
+    "page_info": {
+      "count": 20,
+      "page_size": 2,
+      "links": {
+        "next": "http://0.0.0.0:8000/api/pets?page=3&page_size=2",
+        "previous": "http://0.0.0.0:8000/api/pets?page_size=2"
+      }
+    },
+    "pets": [
+      {
+        "id": 3,
+        "name": "Meghan",
+        "age": 2,
+        "size": "medium",
+        "breed": "themselves",
+        "health_status": "material",
+        "photo_cover": "https://picsum.photos/229/615",
+        "status": "available",
+        "create_at": "2025-02-20T23:18:37.623560Z",
+        "update_at": "2025-02-20T23:18:37.623587Z",
+        "photos": []
+      },
+      {
+        "id": 4,
+        "name": "Ryan",
+        "age": 6,
+        "size": "medium",
+        "breed": "change",
+        "health_status": "couple",
+        "photo_cover": "https://dummyimage.com/354x670",
+        "status": "available",
+        "create_at": "2025-02-20T23:18:37.628448Z",
+        "update_at": "2025-02-20T23:18:37.628465Z",
+        "photos": []
+      }
+    ]
+  }
+}
+```
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
+| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/delete` | Endpoint para el borrado de mascotas. |
+
+#### Borrar mascota
+
+##### Método HTTP
+
+```http
+POST /api/pets/delete
+```
+##### Query Params
+
+| Query Params     | Tipo     | Descripción                |
+| :--------------- | :------- | :------------------------- |
+| `pk`       | `int` | **Requerido**. id de la mascota para la asociacion de fotos. |
+
+##### Ejemplo de solicitud
+
+```http
+Authorization: Token Token <admin_o_staff_token_key>
+Content-Type: application/json
+
+{
+  "pk": 5,
+  "photo_url": "https://example.com/photo1.jpg"
+}
+```
+##### Headers
+
+| Header           | Tipo     | Descripci贸n                |
+| :--------------- | :------- | :------------------------- |
+| `Authorization`  | `string` | **Requerido**. Token de autenticacion de admin o staff |
+
+
+##### Ejemplo de respuesta exitosa
+
+```http
+HTTP/1.1 200 Ok
+Content-Type: application/json
+
+{
+  "status": "success",
+  "message": "Pet updated successfully.",
+  "data": {
+    "Pet": {
+      "id": 5,
+      "name": "Buddy",
+      "age": 5,
+      "size": "medium",
+      "breed": "labrador",
+      "health_status": "healthy",
+      "status": "adoptable",
+      "photos": [
+        {
+          "photo_id": 101,
+          "photo_url": "https://example.com/photo1.jpg"
+        },
+      ]
+    }
+  }
+}
+
+
+
+
+
+
+| Nombre | Método | URL | Descripción |
+|:------ | :----- | :-- | :---------- |
 | [Filtrar Mascotas](#filtrar-mascotas) | `GET` | `/api/pets/filter` | Endpoint para el filtro de mascotas con diferentes parámetros en la API. |
 
 #### Filtrar Mascotas
