@@ -161,14 +161,12 @@ GET /api/pets/registro
 
 | Query Params     | Tipo     | Descripción                |
 | :--------------- | :------- | :------------------------- |
-| `age`       | `int` | **Opcional**. Edad de la mascota |
-| `size`       | `string` | **Opcional**. Tamaño de la mascota |
-| `breed`       | `string` | **Opcional**. Raza de la mascota |
-| `health_status`       | `string` | **Opcional**. Estado de salud de la mascota |
-| `status`       | `string` | **Opcional**. Estado de la mascota |
-| `size_value`     | `int`    | **Opcional**. Valor del tamaño de elementos por página |
-| `page_value`     | `int`    | **Opcional**. Valor de la página para navegar entre la paginación |
-
+| `age`       | `int` | **Requerido**. Edad de la mascota |
+| `size`       | `string` | **Requerido**. Tamaño de la mascota |
+| `breed`       | `string` | **Requerido**. Raza de la mascota |
+| `health_status`       | `string` | **Requerido**. Estado de salud de la mascota |
+| `status`       | `string` | **Requerido**. Estado de la mascota |
+| `photo_cover`       | `URLField` | **Requerido**. Foto de la mascota |
 
 > **NOTA**: Solo acceden usuarios staff o admin
 
@@ -238,9 +236,9 @@ POST /api/pets/update
 | `breed`       | `string` | **Opcional**. Nueva raza de la mascota |
 | `health_status`       | `string` | **Opcional**. Nueva estado de salud de la mascota |
 | `status`       | `string` | **Opcional**. Nueva estado de la mascota |
+| `photo_cover`       | `URLField` | **Opcional**. Foto de la mascota |
 
 > **NOTA**: Solo permisos a usuarios staff o admin.
-
 
 ##### Ejemplo de solicitud
 
@@ -274,7 +272,7 @@ Content-Type: application/json
   'message': 'Pet updated successfully.', 
   'data': {
     'Pet': {
-      "id": "12",
+      "id": "5",
       "age": 6,
       "size": "medium",
       "breed": "labrador",
@@ -400,14 +398,14 @@ Content-Type: application/json
 ```
 | Nombre | Método | URL | Descripción |
 |:------ | :----- | :-- | :---------- |
-| [Borrar Mascota](#borrar-mascota) | `POST` | `/api/pets/pets_available` | Endpoint para el borrado de mascotas. |
+| [fotos Mascota](#fotos-mascota) | `POST` | `/api/pets/upload_photos` | Endpoint subir fotos de mascotas. |
 
 #### Borrar mascota
 
 ##### Método HTTP
 
 ```http
-POST /api/pets/pets_available
+POST /api/pets/upload_photos
 ```
 ##### Query Params
 
@@ -441,7 +439,7 @@ Content-Type: application/json
 
 {
   "status": "success",
-  "message": "Pet updated successfully.",
+  "message": "Pet updated photos successfully.",
   "data": {
     "Pet": {
       "id": 5,
