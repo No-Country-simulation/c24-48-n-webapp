@@ -166,7 +166,7 @@ GET /api/pets/registro
 | `breed`       | `string` | **Requerido**. Raza de la mascota |
 | `health_status`       | `string` | **Requerido**. Estado de salud de la mascota |
 | `status`       | `string` | **Requerido**. Estado de la mascota |
-| `photo_cover`       | `URLField` | **Requerido**. Foto de la mascota |
+| `photo_cover`       | `URLField` | **Opcional**. Foto de la mascota |
 
 > **NOTA**: Solo acceden usuarios staff o admin
 
