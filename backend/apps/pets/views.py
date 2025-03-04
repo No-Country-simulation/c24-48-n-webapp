@@ -3,10 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from apps.core.utils.custom_pagination import CustomPageNumberPagination
 from .models import Pets
-from .serializers import PetsResponseSerializer, PhotosPetsResponseSerializer, PhotosPetSerializer
+from .serializers import PetsResponseSerializer, PetsUpdateSerializer, PhotosPetSerializer
 from config.settings.base import REST_FRAMEWORK
 from rest_framework.decorators import authentication_classes, permission_classes
-from rest_framework.permissions import IsAdminOrStaff
+from .permissions import IsAdminOrStaff
 from rest_framework.authentication import TokenAuthentication
 
 
@@ -97,7 +97,6 @@ def pet_register(request):
 def pet_update(request):
     # Obtiene el valor de la clave primaria (pk) desde los datos de la solicitud
     pk = request.data.get('pk')
-    
     # Verifica si no se proporcionó la clave primaria en la solicitud
     if not pk:
         return Response({
@@ -105,8 +104,19 @@ def pet_update(request):
             'message': 'No pk provided in the request.'
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    try:
+        # Intenta obtener la mascota con la clave primaria proporcionada
+        pet = Pets.objects.get(pk=pk)
+        print(pet.name)
+    except Pets.DoesNotExist:
+        # Respuesta de error si la mascota no existe
+        return Response({
+            'status': 'error',
+            'message': 'Pet does not exist.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     # Inicializa el serializador con los datos de la solicitud
-    pet_serializer = PetsResponseSerializer(data=request.data) 
+    pet_serializer = PetsUpdateSerializer(pet, data=request.data) 
     
     # Verifica si los datos no son válidos
     if not pet_serializer.is_valid():
@@ -114,7 +124,7 @@ def pet_update(request):
         return Response({
             'status': 'error',
             'message': pet_serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST) 
+        }, status=status.HTTP_400_BAD_REQUEST)
     
     # Guarda los datos si la validación es exitosa
     pet_serializer.save()       
@@ -183,7 +193,7 @@ def pet_delete(request):
     
     # Obtiene el valor de la clave primaria (pk) desde los datos de la solicitud
     pk = request.data.get('pk')
-    
+    print(pk)
     # Verifica si no se proporcionó la clave primaria en la solicitud
     if not pk:
         return Response({

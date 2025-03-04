@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from views import pets_filter, pet_register, pet_update, pet_delete, pet_upload_photos, pets_get_available
+from . views import pets_filter, pet_register, pet_update, pet_delete, pet_upload_photos, pets_get_available
 
 urlpatterns = [
     path('pets/filter', pets_filter, name='pets_filter'),

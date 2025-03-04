@@ -64,3 +64,28 @@ class PhotosPetSerializer(serializers.ModelSerializer):
         """
         model = PhotosPets
         fields = ['photo', 'pet_id']
+
+
+class PetsUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pets
+        fields = [
+            'id',
+            'name',
+            'age',
+            'size',
+            'breed',
+            'health_status',
+            'photo_cover',
+            'status',
+        ]
+
+    name = serializers.CharField(required=False)
+    age = serializers.IntegerField(required=False)
+    size = serializers.CharField(required=False)
+    breed = serializers.CharField(required=False)
+    health_status = serializers.CharField(required=False)
+    photo_cover = serializers.ImageField(required=False)
+    status = serializers.CharField(required=False)
+

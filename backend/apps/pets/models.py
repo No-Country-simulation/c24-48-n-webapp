@@ -24,7 +24,9 @@ class Pets(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
-
+    def __str__(self):
+        return self.name
+    
 class PhotosPets(models.Model):
     photo = models.URLField(max_length=500, null=True, blank=True)
     pet = models.ForeignKey(Pets, on_delete=models.CASCADE)
