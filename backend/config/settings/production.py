@@ -13,6 +13,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = [ '*' ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://huellas-felices-production.up.railway.app',
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

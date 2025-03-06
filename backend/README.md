@@ -19,6 +19,7 @@ API REST desarrollada con Django y Django REST Framework. Su propósito es gesti
 - [Endpoints](#endpoints)
   - [Mascotas](#mascotas)
   - [Citas](#citas)
+  - [Usuarios](#usuarios)
 
 ## Instalación
 
