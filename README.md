@@ -46,5 +46,5 @@ Plataforma web para facilitar la adopción de mascotas en refugios. Permite a lo
 |------------------------|-----------|--------------------------|--------------------------|
 | Paola Holguin          | QA        | [PaolaHolguin-QAEngineer](https://github.com/PaolaHolguin-QAEngineer) | [paolaholguin-qaengineer](https://linkedin.com/in/paolaholguin-qaengineer) |
 | Gabriela Bareiro       | UX/UI     | [GabiBareiro](https://github.com/GabiBareiro) | [gabriela-bareiro](https://linkedin.com/in/gabriela-bareiro) |
-| Cristia Paolo Delpiano | Backend   | [delpianocp](https://github.com/delpianocp) | [perfil](https://linkedin.com/in/) |
+| Cristian Paolo Delpiano | Backend   | [delpianocp](https://github.com/delpianocp) | [Delpiano-Cristian](https://www.linkedin.com/in/cristian-paolo-delpiano-604443325) |
 | Johann Gaviria         | Fullstack | [JohannGaviria](https://github.com/JohannGaviria) | [johanngaviria](https://linkedin.com/in/johanngaviria) |
